@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+{% endwith %}
+  <h2>Willkommen, {{ user_data }}!</h2>
+  
+
+  <a href="{{ url_for('logout') }}">Logout</a>
+
+  <h3>📦 Produkte</h3>
+  <div id="product-list">
+    <!-- Produkte werden hier per JavaScript eingefügt -->
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const response = await fetch("https://dummyjson.com/products?limit=6");
+      const data = await response.json();
+      const products = data.products;
+      const container = document.getElementById("product-list");
+
+      products.forEach(product => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid #ccc";
+        card.style.borderRadius = "10px";
+        card.style.padding = "10px";
+        card.style.marginBottom = "10px";
+
+        card.innerHTML = `
+          <h4>${product.title}</h4>
+          <img src="${product.thumbnail}" alt="${product.title}" width="100">
+          <p>${product.description}</p>
+          <button onclick="likeProduct('${product.title}')">❤️ Liken</button>
+        `;
+
+        container.appendChild(card);
+      });
+    });
+
+    function likeProduct(title) {       // Funktion zum Liken eines Produkts
+      fetch("/like", {                  // Hier wird die POST-Anfrage an den Server gesendet
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title }), // Hier wird der Titel des Produkts als JSON gesendet
+      }).then(() => {
+        alert(`„${title}“ wurde gelikt!`);
+      });
+    }
+  </script>
+{% endblock %}

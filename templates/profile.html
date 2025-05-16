@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Profil{% endblock %}
+
+{% block content %}
+<h2>Dein Profil</h2>
+<ul>
+    <li><strong>Benutzername:</strong> {{ user.username }}</li>
+    <li><strong>E-Mail:</strong> {{ user.email }}</li>
+    <li><strong>Land:</strong> {{ user.country }}</li>
+    <li><strong>Registriert am:</strong> {{ user.creation.strftime('%d.%m.%Y %H:%M') }}</li>
+</ul>
+
+<p>Registrierte Nutzer: <strong>{{ user_count }}</strong> .</p>
+
+<h3> Deine Favoriten</h3>
+{% if liked_products %} <!-- liked_products aus Z.133 app.py-->
+    <ul>
+        {% for product in liked_products %}
+            <li>{{ product }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Du hast noch keine Produkte gelikt.</p>
+{% endif %}
+
+<a href="{{ url_for('home') }}">Zurück zur Übersicht</a>
+{% endblock %}

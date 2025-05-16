@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Startseite{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+{% endwith %}
+    <button><a href="{{ url_for('register') }}">Registrieren</a></button>
+    <button><a href="{{ url_for('login') }}">Einloggen</a></button>
+{% endblock %}
