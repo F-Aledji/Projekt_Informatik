@@ -140,27 +140,6 @@ def unlike():
 
 
 
-
-# Produkte Ranking
-@app.route('/ranking')
-def ranking():
-    if 'user_data' not in session:
-        flash("Bitte zuerst einloggen", "danger")
-        return redirect(url_for('login'))
-
-    products = db_liked_product.query.all()
-    product_count = {}
-    for product in products:
-        if product.product in product_count:
-            product_count[product.product] += 1
-        else:
-            product_count[product.product] = 1
-
-    sorted_products = sorted(product_count.items(), key=lambda x: x[1], reverse=True)
-    return render_template('ranking.html', sorted_products=sorted_products)
-
-
-
 # Index Route
 @app.route('/')
 def index():
@@ -173,6 +152,7 @@ def index():
 def home():
     if 'user_data' in session:
         user_data = session['user_data']
+        flash("Willkommen zurück, " + user_data, "success")
         return render_template('home.html', user_data=user_data)
     else:
         flash("Bitte zuerst einloggen", "danger")
@@ -206,3 +186,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+    

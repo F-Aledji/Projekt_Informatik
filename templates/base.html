@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Meine Seite{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav>
-        <!-- Navigation kommt hier hin -->
+        <ul>
+            <li><a href="{{ url_for('index') }}">Startseite</a></li>
+            {% if session.user_data %}
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('profile') }}">Profil</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}">Registrieren</a></li>
+            {% endif %}
+        </ul>
     </nav>
 
     <main>

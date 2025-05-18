@@ -10,38 +10,39 @@
             {% endfor %}
         {% endif %}
 {% endwith %}
-  <h2>Willkommen, {{ user_data }}!</h2>
+  <h2>Produktseite</h2>
   
-
+  
+  
+  <h3>Alle Produkte</h3>
+  
   <a href="{{ url_for('logout') }}">Logout</a>
 
-  <h3>📦 Produkte</h3>
-  <div id="product-list">
-    <!-- Produkte werden hier per JavaScript eingefügt -->
-  </div>
-
-  <script>
+  <div class="product-list-container">
+    <div id = "product-list">
+      <script>
     document.addEventListener("DOMContentLoaded", async () => {
-      const response = await fetch("https://dummyjson.com/products?limit=6");
-      const data = await response.json();
-      const products = data.products;
-      const container = document.getElementById("product-list");
+      const response = await fetch("https://dummyjson.com/products?limit=20"); // Hier wird die API aufgerufen mit einem limit von 20 Artikeln
+      const data = await response.json(); // Hier wird die Antwort in JSON umgewandelt es wird gewartet bis die ganze Antwort kommt
+      const products = data.products; // Die Antwort von oben wird hier in eine Variable gespeichert
+      const container = document.getElementById("product-list");  // Wenn ein HTML Element mit der ID product-list existiert, bekommt sie die Variable container zugewiesen
 
-      products.forEach(product => {
+      products.forEach(product => { // Hier wird für jedes Produkt ein Card-Element erstellt
         const card = document.createElement("div");
-        card.style.border = "1px solid #ccc";
-        card.style.borderRadius = "10px";
-        card.style.padding = "10px";
-        card.style.marginBottom = "10px";
+        card.style.border = "2px solid #ccc";
+        card.style.borderRadius = "30px";
+        card.style.padding = "20px";
+        card.style.marginBottom = "20px";
 
         card.innerHTML = `
           <h4>${product.title}</h4>
           <img src="${product.thumbnail}" alt="${product.title}" width="100">
           <p>${product.description}</p>
-          <button onclick="likeProduct('${product.title}')">❤️ Liken</button>
-        `;
+          <button onclick="likeProduct('${product.title}')"> Gefällt mir! </button>
+          <button onclick="unlikeProduct('${product.title}')"> Gefällt mir nicht mehr! </button> 
+        `; // Letzte Button hat noch keine Funktion
 
-        container.appendChild(card);
+        container.appendChild(card); // Hier wird die Card in den Container eingefügt damit sie angezeigt wird
       });
     });
 
@@ -57,4 +58,9 @@
       });
     }
   </script>
+    </div>
+  </div>
+ 
+
+  
 {% endblock %}
