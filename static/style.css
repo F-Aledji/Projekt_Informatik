@@ -1,1 +1,302 @@
-/* Container mit horizontalem Scroll */
+/* Allgemeine Stile */
+
+
+* { 
+  /*Browser haben Standardabstände – diese Regel sorgt für Einheitlichkeit über alle Browser hinweg. box-sizing: border-box verhindert, dass Padding die Gesamtgröße von Elementen „vergrößert“.*/
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Box-Modell anpassen */
+}
+main {
+  padding-top: 100px; /* je nach Höhe deiner Navbar anpassen */
+}
+
+body {
+  font-family: 'Georgia', serif;
+  background-color: #F8F6F3;
+  color: #222222;
+  line-height: 1.6;
+}
+
+a { 
+  color: #90CAF9; /* Linkfarbe */
+  text-decoration: none; /* Unterstreichung entfernen */
+}
+
+a:hover {
+  text-decoration: underline; /* Unterstreichung bei Hover */
+}
+
+.container {              /* Zentriert die Inhalte und sorgt für gleichmäßige Seitenränder. Hält alles gut lesbar – besonders auf großen Bildschirmen. */
+  max-width: 1200px;     /* Maximale Breite der Seite */
+  margin: 0 auto;       /* Zentriert die Seite */
+  padding: 2rem;       /* Innenabstand */
+}
+
+
+h1, h2, h3 {
+  color: #222222; /* Dunkles Grau für klare Lesbarkeit im hellen Design */
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+
+
+
+
+/*---------------------------------------------------------------------------------------------------------------*/
+
+
+/* Stile für die Index-Seite */
+
+
+.index-heading{
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 5rem;
+  color: #222222;
+  font-weight: 300;
+
+}
+
+.level-one-container{
+  display: flex;                  /* Aktiviert Flexbox -> Inhalte nebeneinander */
+  justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
+  align-items: stretch;         /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
+  flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
+  margin-top: 12rem;          /* Abstand nach oben, damit wird dieser Container in bestimmten pos. platziert */
+  gap: 0px;                  /* Abstand zwischen den Karten */
+  padding: 20px;            /* Etwas Abstand zum Rand */
+  background-color: #f8f6f3c8;
+}
+
+/* Styling für jede einzelne Karte */
+.action-card-index {
+  background-color: #f9f9f95f;      /* Heller Hintergrund für die Karte */
+  border: 2px solid #ddd;         /* Dezenter Rahmen */
+  border-radius: 8px;             /* Abgerundete Ecken */
+  padding: 20px;                 /* Innenabstand */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* Leichter Schatten */
+  text-align: center;         /* Text zentrieren */
+  background-color: #ffffff; /* Hintergrundfarbe der Karte */
+  
+  /* Flex-Eigenschaften für die Karte selbst (nimmt Platz ein) */
+  flex-basis: 300px; /* Mindestbreite einer Karte, bevor sie umbricht */
+  flex-grow: 1;      /* Erlaubt der Karte zu wachsen, wenn Platz ist */
+  max-width: 500px;  /* Maximale Breite einer Karte */
+  max-height: 500px; /* Maximale Höhe einer Karte */
+}
+
+.action-card-index p {
+  margin-bottom: 15px; /* Abstand zwischen Text und Button */
+  color: #333; /* Dunklere Textfarbe */
+}
+
+/* Simples Button-Styling für die Links */
+.action-card-index .btn {
+  display: inline-block; /* Damit Padding etc. richtig wirken */
+  background-color: #2C2C2C;
+  color: white;              /* Weißer Text */
+  padding: 10px 20px;        /* Innenabstand des Buttons */
+  text-decoration: none;     /* Keinen Unterstrich */
+  border-radius: 5px;        /* Abgerundete Ecken für den Button */
+  transition: background-color 0.3s ease; /* Sanfter Übergang für Hover */
+}
+
+.action-card-index .btn:hover {
+  background-color: #FF9800; /* Farbwechsel bei Hover */
+
+}
+
+
+
+
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/* Stile für die Navigationsbar*/
+
+.nav-black {
+  background-color: #222;
+  padding: 1rem 0;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+  position: fixed; /* Fixiert die Navigationsleiste oben */
+  top: 0; /* Oben am Bildschirm */
+  left: 0; /* Links am Bildschirm */
+  width: 100%; /* Volle Breite */
+  z-index: 1000; /* Über anderen Inhalten */
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.nav-project-review {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+
+}
+
+.nav-routings a {
+  margin-left: 1rem;
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-routings a:hover {
+  color: #FF9800;
+}
+
+
+
+
+
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+/* Login & Register Seite Stile */
+
+.lr-page-wrapper {
+  display: flex;                  /* Aktiviert Flexbox -> Inhalte nebeneinander */
+  justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
+  align-items: center;          /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
+  flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
+  min-height: 100vh;          /* Mindestens volle Höhe des Bildschirms */
+  padding: 2rem;             /* Etwas Abstand zum Rand */
+} 
+
+.extra-register{
+  margin-top: 20px;
+}
+
+
+.lr-box{
+  background-color: #ffffff;
+  padding: 2.5rem 2rem; 
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px; /* Maximale Breite der Box */
+  text-align: center; /* Text zentrieren */
+}
+
+.lr-box label {
+  display: block; /* Block-Element für bessere Struktur */
+  margin-top: 1rem; /* Abstand nach oben */
+  margin-bottom: 0.5rem; /* Abstand zwischen Label und Eingabefeld */
+  font-weight: bold; /* Fettdruck für Labels */
+  color: #222222; /* Dunkles Grau für klare Lesbarkeit */
+}
+
+.lr-box input{
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  margin-bottom: 1rem; /* Abstand zwischen Eingabefeld und Button */
+
+}
+
+.lr-box button{
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #2C2C2C;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Sanfter Übergang für Hover */
+
+}
+.lr-box button:hover{
+  background-color: #FF9800; /* Farbwechsel bei Hover */
+}
+
+.lr-heading{
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #222222;
+  font-weight: 400;
+}
+
+.lr-box.register {
+  padding: 2rem 1.5rem;
+}
+
+.lr-box.register input, .lr-box.register select{
+  margin-bottom: 1.0rem
+}
+
+/*----------------------------------------------------------------------------------------------------------------*/
+
+/*Stil für Profilseite*/ 
+
+.profile-page-wrapper {
+  display: flex;                  /* Aktiviert Flexbox -> Inhalte nebeneinander */
+  justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
+  align-items: center;          /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
+  flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
+  min-height: 100vh;          /* Mindestens volle Höhe des Bildschirms */
+  padding: 2rem;             /* Etwas Abstand zum Rand */
+}
+.profile-box{
+  background-color: #ffffff;
+  padding: 2.5rem 2rem; 
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px; /* Maximale Breite der Box */
+  text-align: center; /* Text zentrieren */
+}
+
+.profile-heading{
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #222222;
+  font-weight: 400;
+}
+.profile-subheading{
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #444444;
+  font-weight: 400;
+}
+
+.profile-list {
+  list-style-type: none; /* Entfernt Aufzählungszeichen */
+  padding: 0; /* Entfernt Padding */
+  margin: 0 0 1.5rem 0; /* Entfernt Margin */
+}
+
+.profile-list li {
+  margin-bottom: 0.5rem; /* Abstand zwischen den Listenelementen */
+  font-size: 1.2rem; /* Schriftgröße */
+  color: #333; /* Dunklere Textfarbe */
+}
+
+.profile-user-count, .profile-message{
+  margin-bottom: 0.8rem;
+  color: #555; /* Dunklere Textfarbe */
+}

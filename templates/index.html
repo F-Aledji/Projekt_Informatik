@@ -4,12 +4,25 @@
 
 {% block content %}
 {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 {% endwith %}
-    <button><a href="{{ url_for('register') }}">Registrieren</a></button>
-    <button><a href="{{ url_for('login') }}">Einloggen</a></button>
-{% endblock %}
+
+<h1 class= "index-heading">Willkommen bei Project-Review</h1>
+
+    <div class="level-one-container">
+        <div class="action-card-index">
+          <p>Neu hier? Erstellen Sie ein Profil.</p>
+          <a href="{{ url_for('register') }}" class="btn">Registrieren</a>
+        </div>
+    <div class="action-card-index">
+        <p>Schon registriert? Klicken Sie auf den Link.</p>
+        <a href="{{ url_for('login') }}" class="btn">Einloggen</a>
+        </div>
+    </div>
+
+    
+{% endblock %}s

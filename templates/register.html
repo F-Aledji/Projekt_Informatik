@@ -2,33 +2,36 @@
 
 {% block title %}Registrierung{% endblock %}
 
-
 {% block content %}
-{% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-{% endwith %}
-<h2>Registrierung</h2>
-<form method="POST">
-    <label>Benutzername:</label><br>
-    <input type="text" name="username" required><br><br>
-    <label>E-Mail:</label><br>
-    <input type="email" name="email" required><br><br>
-    <label>Passwort:</label><br>
-    <input type="password" name="password" required><br><br>
-    <label>Land:</label><br>
-    <select name="country" required>
-        <option value="Deutschland">Deutschland</option>
-        <option value="Österreich">Österreich</option>
-        <option value="Schweiz">Schweiz</option>
-    </select>
+<div class="lr-page-wrapper">
+  <div class="lr-box register ">
+    <h2 class="lr-heading"> Registrierung </h2>
 
-    <br><br>
-    <button type="submit">Registrieren</button>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-</form>   
+    <form method="POST">
+        <label>Benutzername:</label><br>
+        <input type="text" name="username" required><br><br>
+        <label>E-Mail:</label><br>
+        <input type="email" name="email" required><br><br>
+        <label>Passwort:</label><br>
+        <input type="password" name="password" required><br><br>
+        <label>Land:</label><br>
+        <select name="country" required>
+            <option value="Deutschland">Deutschland</option>
+            <option value="Österreich">Österreich</option>
+            <option value="Schweiz">Schweiz</option>
+        </select>
+     
+        <button type="submit">Registrieren</button>
+    </form>
+       
+  </div>
+</div>
 {% endblock %}
-

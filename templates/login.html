@@ -1,23 +1,30 @@
+
 {% extends 'base.html' %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-{% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-{% endwith %}
-    <h2>Login</h2>
+<div class="lr-page-wrapper">
+  <div class="lr-box">
+    <h2 class="lr-heading"> Login</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <form method="POST">
-        <label for="email">Benutzername:</label><br>
-        <input type="text" name="username" required><br><br>
+      <label for="username">Benutzername:</label>
+      <input type="text" name="username" required>
 
-        <label for="password">Passwort:</label><br>
-        <input type="password" name="password" required><br><br>
+      <label for="password">Passwort:</label>
+      <input type="password" name="password" required>
 
-        <button type="submit">Einloggen</button>
+      <button type="submit">Einloggen</button>
     </form>
+  </div>
+</div>
 {% endblock %}
