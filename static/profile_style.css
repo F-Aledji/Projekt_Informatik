@@ -1,0 +1,59 @@
+
+/*Stil für Profilseite*/ 
+
+.profile-page-wrapper {
+    display: flex;                 /*block -> Inhalte untereinander */
+    justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
+    align-items: center;          /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
+    flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
+    min-height: 100vh;          /* Mindestens volle Höhe des Bildschirms */
+    padding: 2rem;             /* Etwas Abstand zum Rand */
+  }
+  .profile-box{
+    background-color: #ffffff;
+    padding: 2.5rem 2rem; 
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px; /* Maximale Breite der Box */
+    text-align: center; /* Text zentriere */
+  }
+  
+  .profile-heading{
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #222222;
+    font-weight: 400;
+  }
+  .profile-subheading{
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #444444;
+    font-weight: 400;
+  }
+  
+  .profile-list {
+    list-style-type: none; /* Entfernt Aufzählungszeichen */
+    padding: 0; /* Entfernt Padding */
+    margin: 0 0 1.5rem 0; /* Entfernt Margin */
+  }
+  
+  .profile-list li {
+    margin-bottom: 0.5rem; /* Abstand zwischen den Listenelementen */
+    font-size: 1.2rem; /* Schriftgröße */
+    color: #333; /* Dunklere Textfarbe */
+  }
+
+  .profile-list strong {
+    font-weight: light ; /* Fettdruck für Labels */
+    color: #222222; /* Dunkles Grau für klare Lesbarkeit */
+    
+  }
+  
+  .profile-user-count, .profile-message{
+    margin-bottom: 0.8rem;
+    color: #555; /* Dunklere Textfarbe */
+  
+  }

@@ -1,0 +1,50 @@
+/* Allgemeine Stile */
+
+
+* { 
+    /*Browser haben Standardabstände – diese Regel sorgt für Einheitlichkeit über alle Browser hinweg. box-sizing: border-box verhindert, dass Padding die Gesamtgröße von Elementen „vergrößert“.*/
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Box-Modell anpassen */
+  }
+  main {
+    padding-top: 100px; /* je nach Höhe deiner Navbar anpassen */
+  }
+  
+  body {
+    font-family: 'Georgia', serif;
+    background-color: #F8F6F3;
+    color: #222222;
+    line-height: 1.6;
+  }
+  
+  a { 
+    color: #90CAF9; /* Linkfarbe */
+    text-decoration: none; /* Unterstreichung entfernen */
+  }
+  
+  a:hover {
+    text-decoration: underline; /* Unterstreichung bei Hover */
+  }
+  
+  .container {              /* Zentriert die Inhalte und sorgt für gleichmäßige Seitenränder. Hält alles gut lesbar – besonders auf großen Bildschirmen. */
+    max-width: 1200px;     /* Maximale Breite der Seite */
+    margin: 0 auto;       /* Zentriert die Seite */
+    padding: 2rem;       /* Innenabstand */
+  }
+  
+  
+  h1, h2, h3 {
+    color: #222222; /* Dunkles Grau für klare Lesbarkeit im hellen Design */
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    margin-bottom: 1rem;
+  }
+  
+ 
+  
+
+
+  

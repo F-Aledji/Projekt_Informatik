@@ -1,34 +1,61 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Meine Seite{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <nav class="nav-black">
-        <div class="nav-container">
-            <div class="nav-project-review">Project-Review</div>
-            <div class="nav-routings"> 
-                <a href="{{ url_for('index') }}">Startseite</a>
-                {% if session.user_data %}
-                <a href="{{ url_for('home') }}">Home</a>
-                <a href="{{ url_for('profile') }}">Profil</a>
-                <a href="{{ url_for('logout') }}">Logout</a>
-                {% endif %}
-                {% if not session.user_data %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Registrieren</a>
-                {% endif %}
+    <html lang="de">
+        <head>
+            <meta charset="UTF-8">
+            <title>{% block title %}Meine Seite{% endblock %}</title>
+            <link rel="stylesheet" href="{{ url_for('static', filename='basic_style.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='home_style.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='l_r_style.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='nav_bar_style.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='profile_style.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='flash_style.css') }}">
+        </head>
+    <body>
+        <nav class="nav-black">
+            <div class="nav-container">
+                <div class="nav-project-review">Project-Review</div>
+                    <div class="nav-routings"> 
+                        
+                        {% if session.user_data %}
+                        <a href="{{ url_for('home') }}">Home</a>
+                        <a href="{{ url_for('profile') }}">Meine Kontaktdaten</a>
+                        <a href="{{ url_for('favorites') }}">Meine Favoriten</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                        {% else %}
+                        <a href="{{ url_for('index') }}">Startseite</a>
+                        <a href="{{ url_for('login') }}">Login</a>
+                        <a href="{{ url_for('register') }}">Registrieren</a>
+                        {% endif %}
 
+                    </div>
+                </div>
             </div>
-        </div>
-
-    </nav>
+        </nav>
 
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-</body>
+        <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-container"></div>
+                {% for category, message in messages %}
+                 <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <script> // Chat GPT generiert - hier wird die Flash-Nachricht nach 4 Sekunden ausgeblendet
+            setTimeout(() => {
+              document.querySelectorAll('.flash-message').forEach(el => { // hier wird die Flash-Nachricht ausgewählt
+                el.style.opacity = '0'; // hier wird die Opazität auf 0 gesetzt
+                setTimeout(() => el.remove(), 1000);    // hier wird die Nachricht entfernt
+              });
+            }, 4000); // 4 Sekunden warten, dann ausblenden
+          </script>
+    </body>
 </html>

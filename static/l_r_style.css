@@ -1,0 +1,76 @@
+/* Login & Register Seite Stile */
+
+.lr-page-wrapper {
+    display: flex;                  /* Aktiviert Flexbox -> Inhalte nebeneinander */
+    justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
+    align-items: center;          /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
+    flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
+    min-height: 100vh;          /* Mindestens volle Höhe des Bildschirms */
+    padding: 2rem;             /* Etwas Abstand zum Rand */
+  } 
+  
+  .extra-register{
+    margin-top: 20px;
+  }
+  
+  
+  .lr-box{
+    background-color: #ffffff;
+    padding: 2.5rem 2rem; 
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px; /* Maximale Breite der Box */
+    text-align: center; /* Text zentrieren */
+  }
+  
+  .lr-box label {
+    display: block; /* Block-Element für bessere Struktur */
+    margin-top: 1rem; /* Abstand nach oben */
+    margin-bottom: 0.5rem; /* Abstand zwischen Label und Eingabefeld */
+    font-weight: bold; /* Fettdruck für Labels */
+    color: #222222; /* Dunkles Grau für klare Lesbarkeit */
+  }
+  
+  .lr-box input{
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    margin-bottom: 1rem; /* Abstand zwischen Eingabefeld und Button */
+  
+  }
+  
+  .lr-box button{
+    width: 100%;
+    padding: 0.7rem;
+    background-color: #2C2C2C;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Sanfter Übergang für Hover */
+  
+  }
+  .lr-box button:hover{
+    background-color: #FF9800; /* Farbwechsel bei Hover */
+  }
+  
+  .lr-heading{
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #222222;
+    font-weight: 400;
+  }
+  
+  .lr-box.register {
+    padding: 2rem 1.5rem;
+  }
+  
+  .lr-box.register input, .lr-box.register select{
+    margin-bottom: 1.0rem
+  }

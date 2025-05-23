@@ -7,22 +7,14 @@
   <div class="lr-box register ">
     <h2 class="lr-heading"> Registrierung </h2>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
     <form method="POST">
-        <label>Benutzername:</label><br>
-        <input type="text" name="username" required><br><br>
-        <label>E-Mail:</label><br>
-        <input type="email" name="email" required><br><br>
-        <label>Passwort:</label><br>
-        <input type="password" name="password" required><br><br>
-        <label>Land:</label><br>
+        <label>Benutzername:</label>
+        <input type="text" name="username" required>
+        <label>E-Mail:</label>
+        <input type="email" name="email" required>
+        <label>Passwort:</label>
+        <input type="password" name="password" required>
+        <label>Land:</label>
         <select name="country" required>
             <option value="Deutschland">Deutschland</option>
             <option value="Österreich">Österreich</option>

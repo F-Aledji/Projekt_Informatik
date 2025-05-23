@@ -13,30 +13,6 @@
             <li><strong>Land:</strong> {{ user.country }}</li>
             <li><strong>Registriert am:</strong> {{ user.creation.strftime('%d.%m.%Y %H:%M') }}</li>
         </ul>
-        <h3 class="profile-subheading"> Deine Favoriten</h3>
-{% if liked_products %} <!-- liked_products app.py-->
-        <ul class="profile-list">
-        {% for product in liked_products %}
-            <li>{{ product }}</li>
-        {% endfor %}
-        {% for product in liked_products %}
-            <li>{{ product }}</li>
-        {% endfor %}
-        </ul>
-{% else %}
-    <p class="profile-message">Du hast noch keine Produkte gelikt.</p>
-{% endif %}
     </div>
 </div>
-
-
-
-<div>
-    <p class="profile-user-count">Registrierte Nutzer: <strong>{{ user_count }}</strong></p>
-</div>
-
-
-
-
-
 {% endblock %}

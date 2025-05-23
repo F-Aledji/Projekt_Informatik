@@ -37,6 +37,12 @@ class db_liked_product(db.Model):
 
 
 
+# Funktion um die Anzahl der Benutzer zu zählen
+@app.context_processor
+def inject_user_count():
+    return {"user_count": db_user.query.count()}
+
+
 
 # Register Route
 @app.route('/register', methods=['GET', 'POST'])
@@ -48,11 +54,11 @@ def register():
         country = request.form['country']
 
         if db_user.query.filter_by(email=email).first():
-            flash("Diese Email wird schon verwendet ! :(", "danger")
+            flash("Diese Email wird schon verwendet ! :(", "warning")
             return redirect(url_for('register'))
 
         if db_user.query.filter_by(username=user).first():
-            flash("Dieser Benutzername wird schon verwendet ! :( ", "danger")
+            flash("Dieser Benutzername wird schon verwendet ! :( ", "warning")
             return redirect(url_for('register'))
 
         new_user = db_user(user, password, email, country)
@@ -79,9 +85,12 @@ def login():
             flash("Erfolgreich eingeloggt", "success")
             return redirect(url_for('home'))
         else:
-            flash("Benutzername oder Passwort falsch", "danger")
+            flash("Benutzername oder Passwort falsch", "warning")
             return redirect(url_for('login'))
     return render_template('login.html')
+
+
+
 
 # Logout Route
 @app.route('/logout')
@@ -102,29 +111,24 @@ def logout():
 # Produkt - Like Route
 @app.route('/like', methods=['POST'])
 def like():
-    if 'user_data' not in session:
-        return jsonify({'error': 'Nicht eingeloggt'}), 401
 
     data = request.get_json()
     product = data.get('title')
 
-    if not product:
-        return jsonify({'error': 'Kein Produkt angegeben'}), 400
-
     liked = session.get('liked_products', [])
+    
     if product not in liked:
         liked.append(product)
         session['liked_products'] = liked
         db.session.add(db_liked_product(username=session['user_data'], product=product))
         db.session.commit()
-    return jsonify({'message': f'{product} Das Produkt hat ein Like von dir erhalten'}), 200
+        flash(f'{product} Das Produkt wurde von dir gespeichert', 'success')
+    return jsonify(success=True), 200
 
 
 # Produkt - Unlike Route
 @app.route('/unlike', methods=['POST'])
 def unlike():
-    if 'user_data' not in session:
-        return jsonify({'error': 'Nicht eingeloggt'}), 401
 
     data = request.get_json()
     product = data.get('title')
@@ -135,8 +139,10 @@ def unlike():
         session['liked_products'] = liked
         db_liked_product.query.filter_by(username=session['user_data'], product=product).delete()
         db.session.commit()
+        flash(f'Das Produkt {product} wurde von dir entfernt', 'success')
+    return jsonify(success=True), 200
 
-    return jsonify({'message': f'{product} wurde entfernt'}), 200
+
 
 
 
@@ -152,35 +158,45 @@ def index():
 def home():
     if 'user_data' in session:
         user_data = session['user_data']
-        flash("Willkommen zurück, " + user_data, "success")
+
         return render_template('home.html', user_data=user_data)
     else:
-        flash("Bitte zuerst einloggen", "danger")
+        flash("Bitte zuerst einloggen", "warning")
         return redirect(url_for('login'))
-
-
-# User Delete Route
-# noch ausstehend
-
 
 # Profile Route
 @app.route('/profile')
 def profile():
     if 'user_data' not in session:
-        flash("Bitte zuerst einloggen", "danger")
+        flash("Bitte zuerst einloggen", "warning")
         return redirect(url_for('login'))
     
     user = db_user.query.filter_by(username=session['user_data']).first()
-    user_count = db_user.query.count()
     # Hier werden NUR die Produktnamen extrahiert!
     liked_products = [like.product for like in db_liked_product.query.filter_by(username=user.username).all()]
 
-    return render_template('profile.html', user=user, user_count=user_count, liked_products=liked_products)
+    return render_template('profile.html', user=user, liked_products=liked_products)
+
+#Favoriten Route 
+@app.route('/favorites')
+def favorites():
+    if 'user_data' not in session:
+        flash("Bitte zuerst einloggen", "warning")
+        return redirect(url_for('login'))
+    
+    user = db_user.query.filter_by(username=session['user_data']).first()
+    liked_db_products = [like.product for like in db_liked_product.query.filter_by(username=user.username).all()]
+
+    response = request.get("https://dummyjson.com/products?limit=20")
+    api_get_all_products = response.json().get("products", [])
+    liked_products = []
+    for product in api_get_all_products:
+        if product["title"] in liked_db_products:
+            liked_products.append(product)
 
 
 
-
-
+    return render_template('favorites.html', user=user, liked_products=liked_products)
 
 if __name__ == '__main__':
     with app.app_context():

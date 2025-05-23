@@ -1,0 +1,62 @@
+/* Stile für die Index-Seite */
+
+
+.index-heading{
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    margin-top: 5rem;
+    color: #222222;
+    font-weight: 300;
+  
+  }
+  
+  .level-one-container{
+    display:flex;                  /* Aktiviert Flexbox -> Inhalte nebeneinander */
+    justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
+    align-items: stretch;         /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
+    flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
+    margin-top: 12rem;          /* Abstand nach oben, damit wird dieser Container in bestimmten pos. platziert */
+    gap: 0px;                  /* Abstand zwischen den Karten */
+    padding: 20px;            /* Etwas Abstand zum Rand */
+    background-color: #f8f6f3c8;
+  }
+  
+  /* Styling für jede einzelne Karte */
+  .action-card-index {
+    background-color: #f9f9f95f;      /* Heller Hintergrund für die Karte */
+    border: 2px solid #ddd;         /* Dezenter Rahmen */
+    border-radius: 8px;             /* Abgerundete Ecken */
+    padding: 20px;                 /* Innenabstand */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* Leichter Schatten */
+    text-align: center;         /* Text zentrieren */
+    background-color: #ffffff; /* Hintergrundfarbe der Karte */
+    
+    /* Flex-Eigenschaften für die Karte selbst (nimmt Platz ein) */
+    flex-basis: 300px; /* Mindestbreite einer Karte, bevor sie umbricht */
+    flex-grow: 1;      /* Erlaubt der Karte zu wachsen, wenn Platz ist */
+    max-width: 500px;  /* Maximale Breite einer Karte */
+    max-height: 500px; /* Maximale Höhe einer Karte */
+  }
+  
+  .action-card-index p {
+    margin-bottom: 15px; /* Abstand zwischen Text und Button */
+    color: #333; /* Dunklere Textfarbe */
+  }
+  
+  /* Simples Button-Styling für die Links */
+  .action-card-index .btn {
+    display: inline-block; /* Damit Padding etc. richtig wirken */
+    background-color: #2C2C2C;
+    color: white;              /* Weißer Text */
+    padding: 10px 20px;        /* Innenabstand des Buttons */
+    text-decoration: none;     /* Keinen Unterstrich */
+    border-radius: 5px;        /* Abgerundete Ecken für den Button */
+    transition: background-color 0.3s ease; /* Sanfter Übergang für Hover */
+  }
+  
+  .action-card-index .btn:hover {
+    background-color: #FF9800; /* Farbwechsel bei Hover */
+  
+  }
+  
