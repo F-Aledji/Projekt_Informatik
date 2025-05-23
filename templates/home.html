@@ -14,6 +14,9 @@
       
       <div id = "product-list" class="product-list-container" > <!--  ID für JS  -->
         <script>
+
+      const liked_products_in_db = new Set(JSON.parse('{{ session.get("liked_products", []) | tojson | safe }}'));
+
       document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch("https://dummyjson.com/products?limit=20");    // Hier wird die API aufgerufen mit einem limit von 20 Artikeln
         const data = await response.json();                                        // Hier wird die Antwort in JSON umgewandelt es wird gewartet bis die ganze Antwort kommt
@@ -23,13 +26,17 @@
         products.forEach(product => {                                          // Hier wird für jedes Produkt ein Card-Element erstellt
           const card = document.createElement("div");
           card.className ="product-card";
+          const isLiked = liked_products_in_db.has(product.title);
+
           card.innerHTML = `
             <img src="${product.thumbnail}" alt="${product.title}" width="100">
             <h4>${product.title}</h4>
             <p>${product.description}</p>
-            <button onclick="likeProduct('${product.title}')"> Gefällt mir! </button>
-           
-          `; 
+            ${isLiked ? `<p >Bereits als Favorit markiert 👍</p>` :   // Prüft ob es geliked wird (Ausgabe wenn wahr) : (Ausgabe wenn falsch)
+            `<p></p>`}
+
+
+            <button onclick="likeProduct('${product.title}')"> Gefällt mir! </button>`; 
 
           container.appendChild(card); // Hier wird die Card in den Container eingefügt damit sie angezeigt wird
         });

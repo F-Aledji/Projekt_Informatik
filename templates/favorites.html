@@ -3,30 +3,35 @@
 {% block title %}Favorite{% endblock %}
 
 {% block content %}
-<div class="profile-page-wrapper">
-    <div class="profile-box">
-        <h2 class="profile-heading">Deine Lieblingsprodukte, {{ user.username }}</h2>
+<div class="favorite-page-wrapper">
+    <div class="favorite-box">
+        <h2 class="favorite-heading">Deine Lieblingsprodukte, {{ user.username }}</h2>
 
         
-        <h3 class="profile-subheading"> Produkte mit Likes</h3>
+        <h3 class="favorite-subheading"> Produkte mit Likes</h3>
         {% if liked_products %}
             <div class="product-list-wrapper">
                 <div class="product-list-container">
+                   
                     {% for product in liked_products %}
                         <div class="product-card">
+                           
                             <img src="{{ product['thumbnail'] }}" alt="{{ product['title'] }}" width="100">
                             <h4>{{ product['title'] }}</h4>
                             <p>{{ product['description'] }}</p>
-                            <form action="/unlike" method="post">
+
+                            <form action="/unlike" method="POST">
                                 <input type="hidden" name="title" value="{{ product['title'] }}">
                                 <button type="submit">Gefällt mir nicht mehr!</button>
                             </form>
+
                         </div>
                     {% endfor %}
+
                 </div>
             </div>
         {% else %}
-            <p class="profile-message">Du hast noch keine Produkte gelikt.</p>
+            <p class="favorite-message">Du hast noch keine Produkte gelikt.</p>
         {% endif %}
     </div>
 </div>

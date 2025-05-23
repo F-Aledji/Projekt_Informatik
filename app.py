@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, session, redirect, url_for, request, jsonify, flash, render_template
 from flask_sqlalchemy import SQLAlchemy
+import requests
 
 
 
@@ -109,38 +110,65 @@ def logout():
 
 
 # Produkt - Like Route
+
 @app.route('/like', methods=['POST'])
 def like():
-
     data = request.get_json()
-    product = data.get('title')
+    # Prüfen, ob überhaupt Daten gesendet wurden und ob der Titel da ist
+    if not data:
+        return jsonify(success=False, message="No data provided"), 400  # Bad Request
+    product_title = data.get('title')
 
-    liked = session.get('liked_products', [])
-    
-    if product not in liked:
-        liked.append(product)
-        session['liked_products'] = liked
-        db.session.add(db_liked_product(username=session['user_data'], product=product))
+    if not product_title:
+        return jsonify(success=False, message="No product title provided"), 400
+
+    current_username = session['user_data']
+    liked_in_session = session.get('liked_products', [])  # Deine bestehende Session-Logik
+
+    # Prüfen, ob das Produkt bereits in der DATENBANK für diesen Nutzer existiert
+    existing_db_like = db_liked_product.query.filter_by(username=current_username, product=product_title).first()
+    if existing_db_like:
+        # Produkt ist bereits in der Datenbank geliked
+        flash(f'"{product_title}" ist bereits in deinen Favoriten.', 'info')
+        if product_title not in liked_in_session:
+            liked_in_session.append(product_title)
+            session['liked_products'] = liked_in_session
+    else:
+        # Produkt ist noch nicht in der Datenbank für diesen Nutzer -> Hinzufügen
+        new_db_like = db_liked_product(username=current_username, product=product_title)
+        db.session.add(new_db_like)
         db.session.commit()
-        flash(f'{product} Das Produkt wurde von dir gespeichert', 'success')
-    return jsonify(success=True), 200
+        flash(f'"{product_title}" wurde zu deinen Favoriten hinzugefügt!', 'success')
+    
+    return jsonify(success=True, message=f"Like status for {product_title} updated."), 200
 
 
 # Produkt - Unlike Route
 @app.route('/unlike', methods=['POST'])
 def unlike():
 
-    data = request.get_json()
-    product = data.get('title')
+    product_to_unlike = request.form.get('title')
+    
 
     liked = session.get('liked_products', [])
-    if product in liked:
-        liked.remove(product)
+
+    if not product_to_unlike:
+        flash("Kein Produkt angegeben", "warning")
+        return redirect(url_for('favorites'))
+    
+ 
+    db_product_entry = db_liked_product.query.filter_by(username=session['user_data'], product=product_to_unlike).first()
+    if not db_product_entry:
+        
+        flash(f'Das Produkt {product_to_unlike} konnte nicht entfernt werden.', 'warning')
+    elif db_product_entry:
+        liked.remove(product_to_unlike)
         session['liked_products'] = liked
-        db_liked_product.query.filter_by(username=session['user_data'], product=product).delete()
+        db.session.delete(db_product_entry)
         db.session.commit()
-        flash(f'Das Produkt {product} wurde von dir entfernt', 'success')
-    return jsonify(success=True), 200
+        flash(f'Das Produkt {product_to_unlike} wurde von dir entfernt', 'success')
+    
+    return redirect(url_for('favorites'))
 
 
 
@@ -186,9 +214,15 @@ def favorites():
     
     user = db_user.query.filter_by(username=session['user_data']).first()
     liked_db_products = [like.product for like in db_liked_product.query.filter_by(username=user.username).all()]
-
-    response = request.get("https://dummyjson.com/products?limit=20")
-    api_get_all_products = response.json().get("products", [])
+    try:
+        response = requests.get("https://dummyjson.com/products?limit=100")
+        response.raise_for_status()  # Raise an error for bad responses
+        api_get_all_products = response.json().get("products", [])
+    except requests.exceptions.RequestException as e:
+        flash("Fehler beim Abrufen der Produktdaten {e}", "warning")
+        return redirect(url_for('home'))
+    
+    # Hier werden NUR die Produktnamen extrahiert!
     liked_products = []
     for product in api_get_all_products:
         if product["title"] in liked_db_products:
@@ -202,4 +236,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-    
