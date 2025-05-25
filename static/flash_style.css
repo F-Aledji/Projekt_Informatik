@@ -1,16 +1,20 @@
+/* Stile für Flash-Nachrichten
+   - Positioniert und gestaltet temporäre Benachrichtigungen
+*/
 
-/* Flash-Nachrichten Styles */
 .flash-container {
+  /* Positioniert die Flash-Nachrichten oben zentriert auf der Seite */
   position: fixed;
-  top: 1.5rem;
+  top: 7%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
   width: auto;
-  max-width: 90%;
+  max-width: 30%;
 }
 
 .flash-message {
+  /* Stil für einzelne Flash-Nachrichten */
   padding: 1rem 2rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -24,21 +28,25 @@
 
 /* Farbstile je nach Kategorie */
 .flash-message.success {
+  /* Erfolgsnachricht */
   background-color: #d4edda;
   color: #155724;
 }
 
 .flash-message.error {
+  /* Fehlermeldung */
   background-color: #f8d7da;
   color: #721c24;
 }
 
 .flash-message.warning {
+  /* Warnung */
   background-color: #fff3cd;
   color: #856404;
 }
 
 @keyframes fadein {
+  /* Animation für das Einblenden der Nachricht */
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }

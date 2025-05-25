@@ -1,17 +1,20 @@
-/* Allgemeine Stile */
-
+/* Allgemeine Stile für das gesamte Projekt
+   - Setzt Grundfarben, Schriftarten, Abstände und das Layout für die Seite
+*/
 
 * { 
-    /*Browser haben Standardabstände – diese Regel sorgt für Einheitlichkeit über alle Browser hinweg. box-sizing: border-box verhindert, dass Padding die Gesamtgröße von Elementen „vergrößert“.*/
+    /* Setzt Margin und Padding für alle Elemente auf 0 und verwendet das border-box Modell für konsistente Größenberechnung */
     margin: 0;
     padding: 0;
     box-sizing: border-box; /* Box-Modell anpassen */
   }
   main {
+    /* Sorgt dafür, dass der Hauptinhalt nicht von der Navbar überlappt wird */
     padding-top: 100px; /* je nach Höhe deiner Navbar anpassen */
   }
   
   body {
+    /* Grundschriftart und Hintergrundfarbe für die Seite */
     font-family: 'Georgia', serif;
     background-color: #F8F6F3;
     color: #222222;
@@ -19,32 +22,36 @@
   }
   
   a { 
+    /* Standard-Linkfarbe und keine Unterstreichung */
     color: #90CAF9; /* Linkfarbe */
     text-decoration: none; /* Unterstreichung entfernen */
   }
   
   a:hover {
+    /* Unterstreichung bei Hover für Links */
     text-decoration: underline; /* Unterstreichung bei Hover */
   }
   
-  .container {              /* Zentriert die Inhalte und sorgt für gleichmäßige Seitenränder. Hält alles gut lesbar – besonders auf großen Bildschirmen. */
+  .container {              
+    /* Zentriert die Inhalte und sorgt für gleichmäßige Seitenränder. 
+       Hält alles gut lesbar – besonders auf großen Bildschirmen. */
     max-width: 1200px;     /* Maximale Breite der Seite */
     margin: 0 auto;       /* Zentriert die Seite */
     padding: 2rem;       /* Innenabstand */
   }
   
-  
   h1, h2, h3 {
+    /* Überschriftenfarbe und Abstand */
     color: #222222; /* Dunkles Grau für klare Lesbarkeit im hellen Design */
     margin-bottom: 0.5rem;
   }
   
   p {
+    /* Abstand unterhalb von Absätzen */
     margin-bottom: 1rem;
   }
-  
- 
-  
 
 
-  
+
+
+

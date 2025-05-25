@@ -3,24 +3,31 @@
 {% block title %}Registrierung{% endblock %}
 
 {% block content %}
+<!-- Wrapper für die Registrierungsseite -->
 <div class="lr-page-wrapper">
   <div class="lr-box register ">
+    <!-- Überschrift für das Registrierungsformular -->
     <h2 class="lr-heading"> Registrierung </h2>
 
+    <!-- Registrierungsformular -->
     <form method="POST">
+        <!-- Eingabefeld für den Benutzernamen -->
         <label>Benutzername:</label>
         <input type="text" name="username" required>
+        <!-- Eingabefeld für die E-Mail -->
         <label>E-Mail:</label>
         <input type="email" name="email" required>
+        <!-- Eingabefeld für das Passwort -->
         <label>Passwort:</label>
         <input type="password" name="password" required>
+        <!-- Auswahlfeld für das Land -->
         <label>Land:</label>
         <select name="country" required>
             <option value="Deutschland">Deutschland</option>
             <option value="Österreich">Österreich</option>
             <option value="Schweiz">Schweiz</option>
         </select>
-     
+        <!-- Absende-Button für das Formular -->
         <button type="submit">Registrieren</button>
     </form>
        

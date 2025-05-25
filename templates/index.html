@@ -4,19 +4,23 @@
 
 {% block content %}
 
+<!-- Hauptüberschrift der Startseite -->
+<h1 class="index-heading">Willkommen bei Project-Review</h1>
 
-<h1 class= "index-heading">Willkommen bei Project-Review</h1>
-
-    <div class="level-one-container">
-        <div class="action-card-index">
-          <p>Neu hier? Erstellen Sie ein Profil.</p>
-          <a href="{{ url_for('register') }}" class="btn">Registrieren</a>
-        </div>
+<!-- Container für die beiden Hauptaktionen auf der Startseite -->
+<div class="level-one-container">
+    <!-- Karte für neue Benutzer, um sich zu registrieren -->
+    <div class="action-card-index">
+        <p>Neu hier? Erstellen Sie ein Profil.</p>
+        <!-- Link zur Registrierungsseite -->
+        <a href="{{ url_for('register') }}" class="btn">Registrieren</a>
+    </div>
+    <!-- Karte für bereits registrierte Benutzer zum Einloggen -->
     <div class="action-card-index">
         <p>Schon registriert? Klicken Sie auf den Link.</p>
+        <!-- Link zur Login-Seite -->
         <a href="{{ url_for('login') }}" class="btn">Einloggen</a>
-        </div>
     </div>
+</div>
 
-    
-{% endblock %}s
+{% endblock %}

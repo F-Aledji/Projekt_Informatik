@@ -1,19 +1,23 @@
-/* Stile für die Navigationsbar*/
+/* Stile für die Navigationsbar
+   - Fixiert die Navbar oben, gestaltet Links und Layout
+*/
 
 .nav-black {
+    /* Hintergrundfarbe, Schatten und Fixierung der Navbar */
     background-color: #222;
     padding: 1rem 0;
     color: #fff;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
     position: fixed; /* Fixiert die Navigationsleiste oben */
-    top: 0; /* Oben am Bildschirm */
-    left: 0; /* Links am Bildschirm */
-    width: 100%; /* Volle Breite */
-    z-index: 1000; /* Über anderen Inhalten */
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    z-index: 1000; 
   }
   
   .nav-container {
+    /* Zentriert und verteilt die Navbar-Inhalte */
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -23,13 +27,14 @@
   }
   
   .nav-project-review {
+    /* Stil für den Projekttitel/Logo */
     font-size: 1.5rem;
     font-weight: bold;
     color: #fff;
-  
   }
   
   .nav-routings a {
+    /* Stil für Navigationslinks */
     margin-left: 1rem;
     color: #ccc;
     text-decoration: none;
@@ -37,9 +42,9 @@
   }
   
   .nav-routings a:hover {
+    /* Hover-Effekt für Navigationslinks */
     color: #FF9800;
   }
-  
-  
-  
-  
+
+
+

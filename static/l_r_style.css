@@ -1,20 +1,24 @@
-/* Login & Register Seite Stile */
+/* Stile für Login- und Registrierungsseiten
+   - Zentriert die Boxen, gestaltet Formulare und Buttons
+*/
 
 .lr-page-wrapper {
-    display: flex;                  /* Aktiviert Flexbox -> Inhalte nebeneinander */
-    justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
-    align-items: center;          /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
-    flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
-    min-height: 100vh;          /* Mindestens volle Höhe des Bildschirms */
-    padding: 2rem;             /* Etwas Abstand zum Rand */
+    /* Zentriert die Login/Register-Box vertikal und horizontal, sorgt für responsives Layout */
+    display: flex;                  
+    justify-content: center;       
+    align-items: center;          
+    flex-wrap: wrap;             
+    min-height: 100vh;          
+    padding: 2rem;             
   } 
   
   .extra-register{
+    /* Abstand für zusätzliche Register-Elemente */
     margin-top: 20px;
   }
   
-  
   .lr-box{
+    /* Stil für die Login/Register-Box */
     background-color: #ffffff;
     padding: 2.5rem 2rem; 
     border-radius: 12px;
@@ -25,25 +29,27 @@
   }
   
   .lr-box label {
-    display: block; /* Block-Element für bessere Struktur */
-    margin-top: 1rem; /* Abstand nach oben */
-    margin-bottom: 0.5rem; /* Abstand zwischen Label und Eingabefeld */
-    font-weight: bold; /* Fettdruck für Labels */
-    color: #222222; /* Dunkles Grau für klare Lesbarkeit */
+    /* Stil für Formular-Labels */
+    display: block; 
+    margin-top: 1rem; 
+    margin-bottom: 0.5rem; 
+    font-weight: bold; 
+    color: #222222; 
   }
   
   .lr-box input{
+    /* Stil für Eingabefelder */
     width: 100%;
     padding: 0.7rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
     background-color: #f9f9f9;
-    margin-bottom: 1rem; /* Abstand zwischen Eingabefeld und Button */
-  
+    margin-bottom: 1rem; 
   }
   
   .lr-box button{
+    /* Stil für Formular-Buttons */
     width: 100%;
     padding: 0.7rem;
     background-color: #2C2C2C;
@@ -52,14 +58,15 @@
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Sanfter Übergang für Hover */
-  
+    transition: background-color 0.3s ease; 
   }
   .lr-box button:hover{
-    background-color: #FF9800; /* Farbwechsel bei Hover */
+    /* Hover-Effekt für Buttons */
+    background-color: #FF9800; 
   }
   
   .lr-heading{
+    /* Überschrift-Stil für Login/Register */
     font-size: 2rem;
     margin-bottom: 1.5rem;
     text-align: center;
@@ -68,9 +75,11 @@
   }
   
   .lr-box.register {
+    /* Spezielles Padding für die Register-Box */
     padding: 2rem 1.5rem;
   }
   
   .lr-box.register input, .lr-box.register select{
+    /* Abstand für Inputs und Selects im Register-Formular */
     margin-bottom: 1.0rem
   }

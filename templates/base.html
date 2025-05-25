@@ -10,19 +10,22 @@
             <link rel="stylesheet" href="{{ url_for('static', filename='nav_bar_style.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='profile_style.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='flash_style.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='favorite_style.css') }}">
         </head>
     <body>
+        <!-- Navigation Bar: zeigt je nach Login-Status unterschiedliche Links an -->
         <nav class="nav-black">
             <div class="nav-container">
                 <div class="nav-project-review">Project-Review</div>
                     <div class="nav-routings"> 
-                        
+                        <!-- Wenn eingeloggt: Links zu Home, Profil, Favoriten und Logout -->
                         {% if session.user_data %}
                         <a href="{{ url_for('home') }}">Home</a>
                         <a href="{{ url_for('profile') }}">Meine Kontaktdaten</a>
                         <a href="{{ url_for('favorites') }}">Meine Favoriten</a>
                         <a href="{{ url_for('logout') }}">Logout</a>
                         {% else %}
+                        <!-- Wenn nicht eingeloggt: Links zu Startseite, Login und Registrierung -->
                         <a href="{{ url_for('index') }}">Startseite</a>
                         <a href="{{ url_for('login') }}">Login</a>
                         <a href="{{ url_for('register') }}">Registrieren</a>
@@ -33,15 +36,16 @@
             </div>
         </nav>
 
-
+        <!-- Hauptinhalt der Seite -->
         <main>
+        <!-- Flash-Meldungen werden hier angezeigt (Erfolg, Warnungen, Fehler) -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-            <div class="flash-container"></div>
+            <div class="flash-container">
                 {% for category, message in messages %}
                  <div class="flash-message {{ category }}">{{ message }}</div>
                 {% endfor %}
-            {% endif %}
+            </div>{% endif %}
         {% endwith %}
 
 
@@ -49,11 +53,12 @@
             {% block content %}{% endblock %}
         </main>
 
-        <script> // Chat GPT generiert - hier wird die Flash-Nachricht nach 4 Sekunden ausgeblendet
+        <!-- JavaScript zum automatischen Ausblenden der Flash-Meldungen nach 4 Sekunden -->
+        <script> // hier wird die Flash-Nachricht nach 4 Sekunden ausgeblendet
             setTimeout(() => {
               document.querySelectorAll('.flash-message').forEach(el => { // hier wird die Flash-Nachricht ausgewählt
-                el.style.opacity = '0'; // hier wird die Opazität auf 0 gesetzt
-                setTimeout(() => el.remove(), 1000);    // hier wird die Nachricht entfernt
+                el.style.opacity = '0'; // Nachricht langsam unsichtbar machen
+                setTimeout(() => el.remove(), 1000);    // hier wird die Nachricht nach 1 Sekunde entfernt
               });
             }, 4000); // 4 Sekunden warten, dann ausblenden
           </script>

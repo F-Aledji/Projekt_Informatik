@@ -1,36 +1,64 @@
+{# 
+    Template für die Favoriten-Seite ("favorites.html").
+    Erweitert das Grundlayout "base.html".
+  
+    Zeigt alle vom aktuell eingeloggten Nutzer gelikten Produkte an.
+  
+    Datenherkunft:
+    - "user": das Nutzerobjekt (für die Anzeige des Benutzernamens)
+    - "liked_products": Liste der Produktdaten, die aus externer API geladen
+      und mit den in der DB gespeicherten Favoriten des Nutzers abgeglichen wurden.
+  
+    Funktionalität:
+    - Für jedes Produkt wird eine Karte mit Bild, Titel und Beschreibung angezeigt.
+    - Unter jedem Produkt gibt es einen Button "Gefällt mir nicht mehr!", 
+      der eine POST-Anfrage an die "/unlike"-Route sendet, um das Produkt aus
+      den Favoriten zu entfernen.
+    - Falls der Nutzer noch keine Produkte gelikt hat, wird eine Info-Nachricht angezeigt.
+  
+    Wichtig:
+    - Die Produktbilder und Beschreibungen stammen aus der API (z.B. DummyJSON).
+    - Das Template nutzt eine Schleife, um dynamisch alle gelikten Produkte zu rendern.
+    - Das Formular sendet den Produktnamen verdeckt mit, damit der Server weiß, 
+      welches Produkt entfernt werden soll.
+#}
+      
 {% extends "base.html" %}
 
 {% block title %}Favorite{% endblock %}
 
 {% block content %}
+<!-- Wrapper für die Favoritenseite -->
 <div class="favorite-page-wrapper">
     <div class="favorite-box">
+        <!-- Überschrift mit dem Benutzernamen -->
         <h2 class="favorite-heading">Deine Lieblingsprodukte, {{ user.username }}</h2>
 
-        
+        <!-- Unterüberschrift für die gelikten Produkte -->
         <h3 class="favorite-subheading"> Produkte mit Likes</h3>
         {% if liked_products %}
+            <!-- Produktliste: Zeigt alle gelikten Produkte als Karten -->
             <div class="product-list-wrapper">
                 <div class="product-list-container">
-                   
                     {% for product in liked_products %}
                         <div class="product-card">
-                           
+                            <!-- Produktbild -->
                             <img src="{{ product['thumbnail'] }}" alt="{{ product['title'] }}" width="100">
+                            <!-- Produkttitel -->
                             <h4>{{ product['title'] }}</h4>
+                            <!-- Produktbeschreibung -->
                             <p>{{ product['description'] }}</p>
-
+                            <!-- Button zum Entfernen aus Favoriten -->
                             <form action="/unlike" method="POST">
                                 <input type="hidden" name="title" value="{{ product['title'] }}">
                                 <button type="submit">Gefällt mir nicht mehr!</button>
                             </form>
-
                         </div>
                     {% endfor %}
-
                 </div>
             </div>
         {% else %}
+            <!-- Hinweis, falls keine Produkte gelikt wurden -->
             <p class="favorite-message">Du hast noch keine Produkte gelikt.</p>
         {% endif %}
     </div>

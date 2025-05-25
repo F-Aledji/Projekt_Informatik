@@ -3,10 +3,13 @@
 {% block title %}Profil{% endblock %}
 
 {% block content %}
+<!-- Wrapper für die Profilseite -->
 <div class="profile-page-wrapper">
     <div class="profile-box">
+        <!-- Überschrift mit dem Benutzernamen -->
         <h2 class="profile-heading">Deine Profilseite, {{ user.username }}</h2>
 
+        <!-- Liste mit den Profildaten des Benutzers -->
         <ul class="profile-list">
             <li><strong>Benutzername:</strong> {{ user.username }}</li>
             <li><strong>E-Mail:</strong> {{ user.email }}</li>

@@ -1,25 +1,29 @@
-
-/*Stil für Profilseite*/ 
+/* Stile für die Profilseite
+   - Zentriert die Profilbox, gestaltet Listen und Überschriften
+*/
 
 .profile-page-wrapper {
-    display: flex;                 /*block -> Inhalte untereinander */
-    justify-content: center;       /* Verteilt den Platz zwischen/um die Karten */
-    align-items: center;          /* Stellt sicher, dass Karten gleich hoch sind, falls Inhalt variiert */
-    flex-wrap: wrap;             /* Erlaubt Umbruch auf kleinen Bildschirmen */
-    min-height: 100vh;          /* Mindestens volle Höhe des Bildschirms */
-    padding: 2rem;             /* Etwas Abstand zum Rand */
+    /* Zentriert die Profilbox auf der Seite, sorgt für responsives Layout */
+    display: flex;                 
+    justify-content: center;       
+    align-items: center;          
+    flex-wrap: wrap;             
+    min-height: 100vh;          
+    padding: 2rem;             
   }
   .profile-box{
+    /* Stil für die Profilbox */
     background-color: #ffffff;
     padding: 2.5rem 2rem; 
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     width: 100%;
-    max-width: 400px; /* Maximale Breite der Box */
-    text-align: center; /* Text zentriere */
+    max-width: 400px; 
+    text-align: center; 
   }
   
   .profile-heading{
+    /* Hauptüberschrift der Profilseite */
     font-size: 2rem;
     margin-bottom: 1.5rem;
     text-align: center;
@@ -27,6 +31,7 @@
     font-weight: 400;
   }
   .profile-subheading{
+    /* Unterüberschrift (optional) */
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
     text-align: center;
@@ -35,25 +40,27 @@
   }
   
   .profile-list {
-    list-style-type: none; /* Entfernt Aufzählungszeichen */
-    padding: 0; /* Entfernt Padding */
-    margin: 0 0 1.5rem 0; /* Entfernt Margin */
+    /* Entfernt Standard-Listenstil und Abstände */
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0 0 1.5rem 0; 
   }
   
   .profile-list li {
-    margin-bottom: 0.5rem; /* Abstand zwischen den Listenelementen */
-    font-size: 1.2rem; /* Schriftgröße */
-    color: #333; /* Dunklere Textfarbe */
+    /* Stil für Listeneinträge */
+    margin-bottom: 0.5rem; 
+    font-size: 1.2rem; 
+    color: #333; 
   }
 
   .profile-list strong {
-    font-weight: light ; /* Fettdruck für Labels */
-    color: #222222; /* Dunkles Grau für klare Lesbarkeit */
-    
+    /* Stil für Label-Text in der Liste */
+    font-weight: light ; 
+    color: #222222; 
   }
   
   .profile-user-count, .profile-message{
+    /* Stil für zusätzliche Profilinfos */
     margin-bottom: 0.8rem;
-    color: #555; /* Dunklere Textfarbe */
-  
+    color: #555; 
   }

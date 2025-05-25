@@ -1,21 +1,25 @@
-
 {% extends 'base.html' %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
+<!-- Wrapper für die Login-Seite -->
 <div class="lr-page-wrapper">
   <div class="lr-box">
+    <!-- Überschrift für das Login-Formular -->
     <h2 class="lr-heading"> Login</h2>
 
-
+    <!-- Login-Formular -->
     <form method="POST">
+      <!-- Eingabefeld für den Benutzernamen -->
       <label for="username">Benutzername:</label>
       <input type="text" name="username" required>
 
+      <!-- Eingabefeld für das Passwort -->
       <label for="password">Passwort:</label>
       <input type="password" name="password" required>
 
+      <!-- Absende-Button für das Formular -->
       <button type="submit">Einloggen</button>
     </form>
   </div>
