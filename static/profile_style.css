@@ -4,7 +4,8 @@
 
 .profile-page-wrapper {
     /* Zentriert die Profilbox auf der Seite, sorgt für responsives Layout */
-    display: flex;                 
+
+    display: flex;                 /*Besonderheit an flex: ermöglicht flexibles Layout da es sich an die Größe des Bildschirms anpasst*/
     justify-content: center;       
     align-items: center;          
     flex-wrap: wrap;             
@@ -53,9 +54,9 @@
     color: #333; 
   }
 
-  .profile-list strong {
+  .profile-list span {
     /* Stil für Label-Text in der Liste */
-    font-weight: light ; 
+    font-weight:bold ; 
     color: #222222; 
   }
   

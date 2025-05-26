@@ -1,29 +1,38 @@
-from datetime import datetime
-from flask import Flask, session, redirect, url_for, request, jsonify, flash, render_template
-from flask_sqlalchemy import SQLAlchemy
-import requests
+# - Flask: Hauptobjekt für die Web-App.
+# - session: Zum Speichern von User-Daten über mehrere Anfragen hinweg (z.B. ob jemand eingeloggt ist).
+# - redirect: Leitet den Browser auf eine andere Seite um.
+# - url_for: Erzeugt URLs für Funktionen, super praktisch, wenn sich Routen ändern.
+# - request: Zugriff auf alle Daten der aktuellen Anfrage (Formularfelder, JSON etc.).
+# - jsonify: Python-Daten in JSON umwandeln, gut für API-Antworten.
+# - flash: Kurzlebige Nachrichten (z.B. "Erfolgreich eingeloggt!") anzeigen.
+# - render_template: Lädt HTML-Dateien (Templates) und schickt sie an den Browser.
 
-# Flask-Anwendung initialisieren, die Grundlage für Webserver und Routing ist
+from datetime import datetime                                                                 # Importiert 'datetime' für Zeitstempel, z.B. wann ein User registriert wurde.
+from flask import Flask, session, redirect, url_for, request, jsonify, flash, render_template # Wichtige Flask-Module:
+
+from flask_sqlalchemy import SQLAlchemy                                                       # Das ist das ORM-Tool, um einfach mit der Datenbank zu sprechen, ohne viel SQL schreiben zu müssen.
+import requests                                                                               # Importiert 'requests', um HTTP-Anfragen an externe APIs zu senden (hier für die Produktdaten).
+
+# Flask App initialisieren. Das ist quasi der Startpunkt der Anwendung.
 app = Flask(__name__)
-app.secret_key = 'secret_key_project'  # Wichtig für sichere Sessions (Cookies)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'  # DB-Verbindung zu SQLite-Datei
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Verhindert unnötiges Tracking (Performance)
+app.secret_key = 'secret_key_project'  # Ein geheimer Schlüssel, super wichtig für sichere Sessions (Cookies). Ohne den könnte jemand Sessions manipulieren.
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'  # Definiert, wo die Datenbank liegt. Hier wird eine einfache SQLite-Datei genutzt.
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Eine SQLAlchemy-Einstellung. Deaktiviert das Tracking von Objektänderungen, was die Performance verbessert.
 
-# SQLAlchemy bindet die Datenbank an die App, ermöglicht ORM-Zugriff (Objekte statt SQL)
+# Datenbank-Objekt erstellen und mit der Flask-App verbinden.
 db = SQLAlchemy(app)
 
 
-# Datenbankmodell für Nutzerkonten
-# Spalten: ID (Primärschlüssel), Benutzername, Passwort, E-Mail, Registrierungszeit, Land
-# Benutzername und E-Mail sind eindeutig (unique)
+# Datenbankmodell für User-Accounts. Jede Zeile in der 'db_user'-Tabelle ist ein User.
 class db_user(db.Model):
-    _id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)  # Hinweis: Passwort hier unverschlüsselt (kein Hash!)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    creation = db.Column(db.DateTime, default=datetime.now)  # Zeitstempel der Erstellung
-    country = db.Column(db.String(150), nullable=True)
+    _id = db.Column(db.Integer, primary_key=True) # Eindeutige ID für jeden User, wird automatisch vergeben.
+    username = db.Column(db.String(150), unique=True, nullable=False) # Benutzername, muss einzigartig sein und darf nicht leer sein.
+    password = db.Column(db.String(150), nullable=False)  # Passwort, darf nicht leer sein. WICHTIG: In echten Apps würde man Passwörter HASHEN!
+    email = db.Column(db.String(150), unique=True, nullable=False) # E-Mail, muss auch einzigartig sein und darf nicht leer sein.
+    creation = db.Column(db.DateTime, default=datetime.now)  # Zeitstempel, wann der User erstellt wurde. Standard ist die aktuelle Zeit.
+    country = db.Column(db.String(150), nullable=True) # Land des Users, ist optional.
 
+    # Konstruktor: Wird aufgerufen, wenn ein neuer User erstellt wird.
     def __init__(self, username, password, email, country):
         self.username = username
         self.password = password
@@ -31,265 +40,254 @@ class db_user(db.Model):
         self.country = country
 
 
-# Datenbankmodell für "gelikte" Produkte
-# Verknüpft Nutzername mit Produktnamen, damit man Favoriten speichert
+# Datenbankmodell für gelikte Produkte. Speichert, welcher User welches Produkt mag.
 class db_liked_product(db.Model):
-    _id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), nullable=False)  # Fremdschlüssel zu Nutzername (logisch)
-    product = db.Column(db.String(150), nullable=False)   # Produktname
+    _id = db.Column(db.Integer, primary_key=True)                       # Eindeutige ID für jeden "Like"-Eintrag.
+    username = db.Column(db.String(150), nullable=False)                # Der User, der das Produkt gelikt hat.
+    product = db.Column(db.String(150), nullable=False)                 # Der Name des gelikten Produkts.
 
 
-# Context-Processor: Fügt allen Templates die Anzahl der registrierten Nutzer hinzu
-# Wird automatisch in jedem Template als Variable "user_count" verfügbar sein
-@app.context_processor
-def inject_user_count():
-    return {"user_count": db_user.query.count()}  # Anzahl aller Nutzer aus DB
+# Startseite der Anwendung. Erreichbar unter '/'.
+@app.route('/')
+def index():
+    return render_template('index.html') # Zeigt die 'index.html' an.
 
 
-# Route zum Registrieren neuer Nutzer (URL: /register)
-# GET-Anfrage zeigt das Registrierungsformular an
-# POST-Anfrage verarbeitet Formulardaten, prüft auf Duplikate und speichert neuen Nutzer
-# Datenherkunft: Formularfelder username, email, password, country (aus HTTP POST)
-# Bei Fehlern wird mit Flash-Meldung zurück zum Formular geleitet
-# Bei Erfolg weiter zur Login-Seite
+# Route für die Registrierung neuer User. Erreichbar unter '/register'.
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    # Wenn das Formular abgeschickt wurde (POST-Anfrage):
     if request.method == 'POST':
-        user = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        country = request.form['country']
+        user = request.form['username']                                 # Holt den Usernamen aus dem Formular.
+        email = request.form['email']                                   # Holt die E-Mail aus dem Formular.
+        password = request.form['password']                             # Holt das Passwort aus dem Formular.
+        country = request.form['country']                               # Holt das Land aus dem Formular.
 
-        # Prüfen, ob Email oder Username bereits vergeben sind (Daten aus DB-Abfragen)
+        # Prüfen, ob E-Mail schon vergeben ist.
         if db_user.query.filter_by(email=email).first():
-            flash("Diese Email wird schon verwendet ! :(", "warning")
-            return redirect(url_for('register'))
+            flash("Email existiert schon!", "warning") # Nachricht an den User.
+            return redirect(url_for('register')) # Zurück zum Registrierungsformular.
 
+        # Prüfen, ob Username schon vergeben ist.
         if db_user.query.filter_by(username=user).first():
-            flash("Dieser Benutzername wird schon verwendet ! :( ", "warning")
-            return redirect(url_for('register'))
+            flash("Username existiert schon!", "warning") # Nachricht an den User.
+            return redirect(url_for('register')) # Zurück zum Registrierungsformular.
 
-        # Wenn Daten ok, neuen Benutzer anlegen und speichern
+        # Neuen User in der Datenbank speichern.
         new_user = db_user(user, password, email, country)
-        db.session.add(new_user)
-        db.session.commit()
+        db.session.add(new_user) # User zur Session hinzufügen.
+        db.session.commit() # Änderungen in der DB speichern.
 
-        flash("Benutzer erfolgreich registriert ! :)", "success")
-        return redirect(url_for('login'))
+        flash("Registrierung erfolgreich!", "success") # Erfolgsmeldung.
+        return redirect(url_for('login')) # Weiter zur Login-Seite.
 
-    # GET: Registrierungsformular anzeigen (HTML Template)
-    return render_template('register.html')
+    # Wenn die Seite nur aufgerufen wird (GET-Anfrage):
+    return render_template('register.html') # Registrierungsformular anzeigen.
 
 
-# Login-Route (URL: /login)
-# GET zeigt Login-Formular an
-# POST prüft eingegebene Daten mit DB-Einträgen ab
-# Session wird bei Erfolg mit Username und gelikten Produkten gefüllt
-# Flash-Meldungen informieren über Fehler (Benutzer nicht gefunden, falsches Passwort)
+# Route für den Login. Erreichbar unter '/login'.
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Wenn der User schon eingeloggt ist, direkt zur Home-Seite.
     if 'user_data' in session:
-        flash("Du bist bereits eingeloggt", "warning")
+        flash("Bereits eingeloggt", "warning")
         return redirect(url_for('home'))
     
+    # Wenn das Login-Formular abgeschickt wurde (POST-Anfrage):
     if request.method == 'POST':
-        user = request.form['username']
-        password = request.form['password']
+        user = request.form['username'] # Holt den Usernamen.
+        password = request.form['password'] # Holt das Passwort.
 
-        # Nutzer aus DB suchen, Passwort prüfen
-        user_data = db_user.query.filter_by(username=user).first()
+        user_data = db_user.query.filter_by(username=user).first() # User in DB suchen.
 
+        # Wenn User gefunden und Passwort stimmt:
         if user_data and user_data.password == password:
-            # Session speichern: Username + Liste gelikter Produkte (aus DB geladen)
-            session['user_data'] = user_data.username
+            session['user_data'] = user_data.username # Usernamen in Session speichern.
+            # Gelikte Produkte des Users aus DB holen und in Session speichern.
             likes = db_liked_product.query.filter_by(username=user_data.username).all()
             session['liked_products'] = [like.product for like in likes]
 
-            flash("Erfolgreich eingeloggt", "success")
-            return redirect(url_for('home'))
+            flash("Login erfolgreich!", "success") # Erfolgsmeldung.
+            return redirect(url_for('home')) # Weiter zur Home-Seite.
         
+        # Wenn User nicht gefunden:
         elif not user_data:
-            flash("Benutzername nicht gefunden. Bitte zu erst registrieren", "warning")
-            return redirect(url_for('register'))
+            flash("Benutzer nicht gefunden!", "warning")
+            return redirect(url_for('register')) # Zum Registrieren leiten.
+        # Wenn Passwort falsch:
         else:
-            flash("Benutzername oder Passwort falsch", "warning")
-            return redirect(url_for('login'))
+            flash("Falsches Passwort!", "warning")
+            return redirect(url_for('login')) # Zurück zum Login.
 
-    # GET: Login-Formular anzeigen
-    return render_template('login.html')
+    # Wenn die Seite nur aufgerufen wird (GET-Anfrage):
+    return render_template('login.html') # Login-Formular anzeigen.
 
 
-# Logout-Route (URL: /logout)
-# Sichert gelikte Produkte aus Session in DB (falls noch nicht gespeichert)
-# Löscht Session-Daten (Logout)
-# Redirect zur Startseite
+# Route für den Logout. Erreichbar unter '/logout'.
 @app.route('/logout')
 def logout():
+    # Vor dem Logout: Aktuelle Likes aus der Session in die DB speichern, falls neue dazugekommen sind.
     if 'user_data' in session:
         liked_products = session.get('liked_products', [])
-        # Für alle Produkte in Session prüfen, ob schon in DB; falls nicht, hinzufügen
         for product in liked_products:
+            # Nur speichern, wenn noch nicht in DB.
             if not db_liked_product.query.filter_by(username=session['user_data'], product=product).first():
                 db.session.add(db_liked_product(username=session['user_data'], product=product))
-        db.session.commit()
+        db.session.commit() # Änderungen speichern.
     
-    # Session leeren (Logout)
-    session.pop('user_data', None)
+    # Session leeren, um den User auszuloggen.
+    session.pop('user_data', None) # das None sorgt dafür, dass kein Fehler kommt, wenn der Key nicht existiert.
     session.pop('liked_products', None)
-    flash("Erfolgreich ausgeloggt", "success")
-    return redirect(url_for('index'))
+    flash("Ausgeloggt!", "success") # Erfolgsmeldung.
+    return redirect(url_for('index')) # Zur Startseite umleiten.
 
 
-# Route zum "Liken" eines Produkts (AJAX POST mit JSON)
-# Erwartet JSON mit Feld "title" = Produktname
-# Prüft, ob Produkt schon gelikt (in DB)
-# Fügt neuen Like hinzu oder aktualisiert Session
-# Gibt JSON-Response zurück für Frontend (AJAX)
-@app.route('/like', methods=['POST'])
-def like():
-    data = request.get_json()
-    if not data:
-        return jsonify(success=False, message="No data provided"), 400
-    product_title = data.get('title')
-
-    if not product_title:
-        return jsonify(success=False, message="No product title provided"), 400
-
-    current_username = session['user_data']
-    liked_in_session = session.get('liked_products', [])
-
-    existing_db_like = db_liked_product.query.filter_by(username=current_username, product=product_title).first()
-    if existing_db_like:
-        # Produkt bereits gelikt, nur Session ggf. ergänzen
-        flash(f'"{product_title}" ist bereits in deinen Favoriten.', 'warning')
-        if product_title not in liked_in_session:
-            liked_in_session.append(product_title)
-            session['liked_products'] = liked_in_session
-    else:
-        # Neues Like speichern (DB + Session)
-        new_db_like = db_liked_product(username=current_username, product=product_title)
-        db.session.add(new_db_like)
-        db.session.commit()
-        if product_title not in liked_in_session:
-            liked_in_session.append(product_title)
-            session['liked_products'] = liked_in_session
-        flash(f'"{product_title}" wurde zu deinen Favoriten hinzugefügt!', 'success')
-    
-    # JSON-Response an Client
-    return jsonify(success=True, message=f"Like status for {product_title} updated."), 200
 
 
-# Route zum Entfernen eines gelikten Produkts (POST)
-# Erwartet Formulardaten mit Feld "title"
-# Löscht Eintrag aus DB und aktualisiert Session
-# Redirect zurück auf Favoriten-Seite
-@app.route('/unlike', methods=['POST'])
-def unlike():
-    current_username = session.get('user_data')
-    if not current_username:
-        flash("Sitzungsfehler oder nicht eingeloggt.", "danger")
-        return redirect(url_for('login'))
-
-    product_to_unlike = request.form.get('title')
-    liked = session.get('liked_products', [])
-
-    if not product_to_unlike:
-        flash("Kein Produkt angegeben", "warning")
-        return redirect(url_for('favorites'))
-    
-    # DB-Eintrag löschen, wenn vorhanden
-    db_product_entry = db_liked_product.query.filter_by(username=current_username, product=product_to_unlike).first()
-    if db_product_entry:
-        db.session.delete(db_product_entry)
-        db.session.commit()
-        flash(f'Das Produkt "{product_to_unlike}" gefällt dir nicht mehr', 'success')
-
-        # Auch aus Session entfernen
-        if product_to_unlike in liked:
-            liked.remove(product_to_unlike)
-            session['liked_products'] = liked
-            session.modified = True
-    else:
-        flash(f'Das Produkt "{product_to_unlike}" ist nicht in deinen Favoriten', 'warning')
-
-    return redirect(url_for('favorites'))
 
 
-# Index-Route (Startseite)
-# Einfaches Template ohne Login-Abfrage
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-# Home-Route (eingeloggte Nutzer)
-# Prüft, ob Nutzer eingeloggt (Session)
-# Zeigt personalisierte Seite mit Usernamen
+# Home-Seite für eingeloggte User.
+# Erwartet: Der User muss eingeloggt sein (Prüfung über die Session).
+# Gibt weiter: Rendert die 'home.html' mit dem Usernamen, damit der User seine persönliche Startseite sieht.
+# Wenn nicht eingeloggt, wird der User zum Login umgeleitet und bekommt eine Warnung.
 @app.route('/home')
 def home():
-    if 'user_data' in session:
-        user_data = session['user_data']
-        return render_template('home.html', user_data=user_data)
+    if 'user_data' in session: # Prüfen, ob User eingeloggt ist.
+        user_data = session['user_data'] # Usernamen holen.
+        return render_template('home.html', user_data=user_data) # 'home.html' anzeigen mit Usernamen.
     else:
-        flash("Bitte zuerst einloggen", "warning")
-        return redirect(url_for('login'))
+        flash("Bitte einloggen!", "warning") # Wenn nicht, Fehlermeldung.
+        return redirect(url_for('login')) # Zum Login umleiten.
 
 
-# Profilseite
-# Zeigt User-Daten und Liste der gelikten Produkte (nur Produktnamen)
-# Daten aus DB, nur für eingeloggte Nutzer zugänglich
+# Profilseite des Users.
+# Erwartet: User muss eingeloggt sein (Session wird geprüft).
+# Gibt weiter: Rendert die 'profile.html' und übergibt die Userdaten sowie alle Produkte, die der User gelikt hat.
+# Zeigt dem User also sein Profil und seine Favoriten an.
 @app.route('/profile')
 def profile():
-    if 'user_data' not in session:
-        flash("Bitte zuerst einloggen", "warning")
-        return redirect(url_for('login'))
+    if 'user_data' not in session: # Prüfen, ob User eingeloggt ist.
+        flash("Bitte einloggen!", "warning")
+        return redirect(url_for('login')) # Wenn nicht, zum Login.
     
-    user = db_user.query.filter_by(username=session['user_data']).first()
+    user = db_user.query.filter_by(username=session['user_data']).first() # User-Daten aus DB holen.
+    # Alle gelikten Produkte des Users holen.
     liked_products = [like.product for like in db_liked_product.query.filter_by(username=user.username).all()]
 
-    return render_template('profile.html', user=user, liked_products=liked_products)
+    return render_template('profile.html', user=user, liked_products=liked_products) # Profilseite anzeigen.
 
 
-# Favoriten-Seite
-# Zeigt alle gelikten Produkte mit Detailinfos von externer API
-# Holt Produktliste (limit 20) per HTTP GET von DummyJSON API
-# Filtert nur Produkte heraus, die Nutzer gelikt hat (Daten aus DB)
-# Bei Fehlern (API down) wird zur Home-Seite weitergeleitet mit Fehlermeldung
+# Favoriten-Seite für eingeloggte User.
+# Erwartet: User muss eingeloggt sein (Session wird geprüft).
+# Gibt weiter: Holt alle Produkte, die der User gelikt hat, aus der Datenbank und vergleicht sie mit den Produkten aus der externen API.
+# Rendert dann die 'favorites.html' mit den detaillierten Produktinfos der Favoriten.
+# Wenn der User nicht eingeloggt ist, wird er zum Login umgeleitet.
 @app.route('/favorites')
 def favorites():
-    if 'user_data' not in session:
-        flash("Bitte zuerst einloggen", "warning")
-        return redirect(url_for('login'))
+    if 'user_data' not in session: # Prüfen, ob User eingeloggt ist.
+        flash("Bitte einloggen!", "warning")
+        return redirect(url_for('login')) # Wenn nicht, zum Login.
     
-    user = db_user.query.filter_by(username=session['user_data']).first()
+    user = db_user.query.filter_by(username=session['user_data']).first() # User-Daten holen.
+    # Nur die Namen der gelikten Produkte aus der Datenbank holen.
     liked_db_products = [like.product for like in db_liked_product.query.filter_by(username=user.username).all()]
 
     try:
+        # Produkte von externer API holen (hier DummyJSON, limitiert auf 20).
         response = requests.get("https://dummyjson.com/products?limit=20")
-        response.raise_for_status()
-        api_get_all_products = response.json().get("products", [])
+        response.raise_for_status() # Fehler werfen, wenn HTTP-Statuscode schlecht ist.
+        api_get_all_products = response.json().get("products", []) # JSON parsen und Produkte holen.
     except requests.exceptions.RequestException as e:
-        flash(f"Fehler beim Abrufen der Produktdaten {e}", "warning")
-        return redirect(url_for('home'))
+        flash(f"API-Fehler: {e}", "warning") # Fehler bei API-Zugriff.
+        return redirect(url_for('home')) # Zur Home-Seite umleiten.
     
-    liked_products = []
+    liked_products = [] # Liste für detaillierte gelikte Produkte.
+    # Nur die Produkte von der API filtern, die der User auch wirklich gelikt hat.
     for product in api_get_all_products:
         if product["title"] in liked_db_products:
-            liked_products.append(product)
+            liked_products.append(product) # Wenn gelikt, das ganze Produkt-Objekt hinzufügen.
 
-    return render_template('favorites.html', user=user, liked_products=liked_products)
+    return render_template('favorites.html', user=user, liked_products=liked_products) # Favoriten-Seite anzeigen.
 
 
-# Debug-Route zum Anzeigen der Session-Daten als JSON (für Entwickler)
-# Kann genutzt werden, um Session-Inhalte im Browser zu prüfen
+# Debug-Route: Zeigt Session-Daten als JSON. Nur für Entwicklung!
 @app.route('/debug-session')
 def debug_session_view():
-    session_as_dict = dict(session)
-    return jsonify(session_as_dict)
+    return jsonify(dict(session)) # Session in ein Dictionary umwandeln und als JSON ausgeben.
 
 
-# Startet die App mit Debug-Modus, erstellt DB-Tabellen falls nötig
+
+
+# Route für die Like-Funktion. Wird per AJAX aufgerufen. Ajax ist eine Technik, um im Hintergrund Daten zu senden und zu empfangen, ohne die Seite neu zu laden.
+@app.route('/like', methods=['POST'])
+def like():
+    data = request.get_json() # JSON-Daten von der Anfrage holen.
+    if not data:
+        return jsonify(success=False, message="Keine Daten"), 400 # Fehler, wenn keine Daten.
+    product_title = data.get('title') # Produkttitel aus den Daten holen.
+
+    if not product_title:
+        return jsonify(success=False, message="Fehlender Titel"), 400 # Fehler, wenn Titel fehlt.
+
+    current_username = session['user_data'] # Aktuellen Usernamen holen.
+    liked_in_session = session.get('liked_products', []) # Gelikte Produkte aus Session holen.
+
+    # Prüfen, ob Produkt schon in DB gelikt ist.
+    existing_db_like = db_liked_product.query.filter_by(username=current_username, product=product_title).first() #first() gibt das erste gefundene Ergebnis zurück oder None, wenn nichts gefunden wurde.
+    if existing_db_like:
+        flash(f'"{product_title}" ist schon in Favoriten.', 'warning') # Info-Meldung.
+        # Sicherstellen, dass es auch in der Session ist.
+        if product_title not in liked_in_session:
+            liked_in_session.append(product_title)
+            session['liked_products'] = liked_in_session
+    else:
+        # Produkt neu liken (in DB und Session).
+        new_db_like = db_liked_product(username=current_username, product=product_title) # Nimmt den Usernamen und Produkttitel als Parameter.
+        db.session.commit()
+        if product_title not in liked_in_session:
+            liked_in_session.append(product_title)
+            session['liked_products'] = liked_in_session
+        flash(f'"{product_title}" zu Favoriten hinzugefügt!', 'success') # Erfolgsmeldung.
+    
+    return jsonify(success=True, message=f"Like für {product_title} aktualisiert."), 200 # JSON-Antwort zurück.
+
+
+# Route für die Unlike-Funktion. Wird per POST-Anfrage aufgerufen.
+@app.route('/unlike', methods=['POST'])
+def unlike():
+    current_username = session.get('user_data') # Aktuellen Usernamen holen.
+    if not current_username:
+        flash("Nicht eingeloggt!", "danger")
+        return redirect(url_for('login')) # Wenn nicht eingeloggt, zum Login.
+
+    product_to_unlike = request.form.get('title') # Produkttitel aus Formular holen.
+    liked = session.get('liked_products', []) # Gelikte Produkte aus Session holen.
+
+    if not product_to_unlike:
+        flash("Kein Produkt angegeben", "warning")
+        return redirect(url_for('favorites')) # Wenn kein Produkt, zurück zu Favoriten.
+    
+    # Produkt aus DB löschen.
+    db_product_entry = db_liked_product.query.filter_by(username=current_username, product=product_to_unlike).first() #first() gibt das erste gefundene Ergebnis zurück oder None, wenn nichts gefunden wurde.
+    #wenn das Produkt in der DB existiert, löschen.
+    if db_product_entry:
+        db.session.delete(db_product_entry)
+        db.session.commit()
+        flash(f'"{product_to_unlike}" nicht mehr favorisiert.', 'success') # Erfolgsmeldung.
+
+        # Auch aus Session entfernen.
+        if product_to_unlike in liked:
+            liked.remove(product_to_unlike)
+            session['liked_products'] = liked
+            session.modified = True # Wichtig: Session als geändert markieren! Dmait Flask weiß, dass sie gespeichert werden muss.
+    else:
+        flash(f'"{product_to_unlike}" nicht in Favoriten.', 'warning') # Warnung, wenn nicht gefunden.
+
+    return redirect(url_for('favorites')) # Zurück zu Favoriten.
+
+
+# Startet die Flask-App.
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+    with app.app_context(): # Erstellt einen App-Kontext, wichtig für DB-Operationen beim Start.
+        db.create_all() # Erstellt alle DB-Tabellen, falls sie noch nicht existieren.
+    app.run(debug=True) # Startet den Server im Debug-Modus (Fehleranzeige, Auto-Reload). Im echten Betrieb auf False setzen!

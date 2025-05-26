@@ -11,10 +11,10 @@
 
         <!-- Liste mit den Profildaten des Benutzers -->
         <ul class="profile-list">
-            <li><strong>Benutzername:</strong> {{ user.username }}</li>
-            <li><strong>E-Mail:</strong> {{ user.email }}</li>
-            <li><strong>Land:</strong> {{ user.country }}</li>
-            <li><strong>Registriert am:</strong> {{ user.creation.strftime('%d.%m.%Y %H:%M') }}</li>
+            <li><span>Benutzername:</span> {{ user.username }}</li>
+            <li><span>E-Mail: </span> {{ user.email }}</li>
+            <li><span>Land: </span> {{ user.country }}</li>
+            <li><span>Registriert am: </span>{{ user.creation.strftime('%d.%m.%Y %H:%M') }}</li>
         </ul>
     </div>
 </div>

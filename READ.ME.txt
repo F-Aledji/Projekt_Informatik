@@ -1,0 +1,126 @@
+# Project-Review
+
+Dieses Projekt ist eine Webanwendung, die es Nutzern ermöglicht, Produkte von einer externen API (dummyjson.com) anzuzeigen und zu favorisieren. Produkte können von Nutzern geliked und von der Favoritenliste entfernt werden. Dabei werden sowohl clientseitige (home.html) als auch serverseitige (favorites.html) API-Anfragen verwendet.
+
+## Inhaltsverzeichnis
+
+- [Über das Projekt](#über-das-projekt)
+- [Features](#features)
+- [Technologien](#technologien)
+- [Installation & Setup](#installation--setup)
+- [Verzeichnisstruktur](#verzeichnisstruktur)
+- [Endpunkte / Routen](#endpunkte--routen)
+- [Unterschiede der API-Anfragen](#unterschiede-der-api-anfragen)
+- [Nutzung](#nutzung)
+- [Lizenz](#lizenz)
+
+## Über das Projekt
+
+Dieses Projekt stellt eine Produktbewertungsanwendung dar, bei der Nutzer:
+- Produkte von einer externen API abrufen und anzeigen
+- Produkte als Favoriten ("Gefällt mir") markieren und diese in einer Datenbank speichern
+- Favoriten über ein separates Interface (favorites.html) verwalten
+
+Das Ziel ist es, die Unterschiede zwischen clientseitigen und serverseitigen API-Anfragen hervorzuheben und zu veranschaulichen, wie unterschiedliche Ansätze für das Rendern von dynamischen Inhalten genutzt werden können.
+
+## Features
+
+- **Produkte anzeigen:** Dynamisches Laden von Produkten über die externe API.
+- **Favoriten verwalten:** Produkte können geliked und entliked werden.
+- **Session Handling:** Speicherung der Nutzer-Session und der favorisierten Produkte.
+- **Benutzer-Authentifizierung:** Login, Registrierung und Logout.
+- **Unterschiedliche API-Anfragen:**
+  - **Clientseitige API-Anfrage in home.html:** Lädt die Produktdaten im Browser und rendert die Karte direkt via JavaScript.
+  - **Serverseitige API-Anfrage in favorites.html:** Holt die Favoriten-Daten auf dem Server, filtert diese anhand der Datenbank und übergibt nur die gefilterten Produkte an das Template.
+
+## Technologien
+
+- **Backend:** Python, Flask, SQLAlchemy
+- **Frontend:** HTML, CSS, JavaScript (Fetch API)
+- **Datenbank:** SQLite (Standard) oder andere DB, abhängig von der Konfiguration
+- **API:** Externe API von [dummyjson.com](https://dummyjson.com/products)
+
+## Installation & Setup
+
+1. **Repository clonen:**
+
+   ```bash
+   git clone <repository_url>
+   cd Projekt_Informatik
+   ```
+
+2. **Virtuelle Umgebung erstellen und aktivieren:**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Abhängigkeiten installieren:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Datenbank initialisieren und Anwendung starten:**
+
+   ```bash
+   python app.py
+   ```
+
+
+## Verzeichnisstruktur
+
+```
+Projekt_Informatik/
+├── app.py               # Hauptanwendung, definiert alle Routen und Logik
+├── requirements.txt     # Abhängigkeiten
+├── templates/
+│   ├── base.html        # Basis-Layout für alle Seiten
+│   ├── home.html        # Startseite (clientseitige API-Anfrage)
+│   ├── favorites.html   # Favoriten-Seite (serverseitige API-Anfrage)
+│   ├── login.html       # Login-Formular
+│   └── register.html    # Registrierungsformular
+└── static/              # Statische Dateien (CSS, JavaScript, Bilder)
+```
+
+## Endpunkte / Routen
+
+- **/** - Startseite (leitet ggf. an Login um)
+- **/home** - Home-Seite für eingeloggte Nutzer; lädt Produkte per clientseitiger API-Anfrage (home.html)
+- **/favorites** - Favoriten-Seite; holt favorisierte Produkte serverseitig und rendert diese (favorites.html)
+- **/login** - Login-Seite
+- **/register** - Registrierungsseite
+- **/logout** - Logout, leert Sessiondaten
+- **/like** - API-Endpunkt (POST) für das Liken eines Produkts (AJAX)
+- **/unlike** - API-Endpunkt (POST) für das Entfernen eines Likes (AJAX)
+- **/debug-session** - Debug-Route zur Anzeige der aktuellen Session-Daten
+
+## Unterschiede der API-Anfragen
+
+<!--
+Unterschiede zwischen der API-Anfrage in home.html und in favorites.html:
+
+1. Clientseitig vs. Serverseitig:
+   - In home.html wird die API-Anfrage clientseitig im Browser per JavaScript mit fetch() durchgeführt.
+   - In favorites.html wird die API-Anfrage serverseitig mittels Python's requests.get() in der Flask-Route "/favorites" ausgeführt.
+
+2. Datenverarbeitung:
+   - home.html lädt alle Produktdaten direkt im Browser und rendert diese anschließend. Die Prüfung, ob ein Produkt favorisiert wurde, erfolgt anhand der Session-Daten, die als JSON eingebettet werden.
+   - favorites.html filtert auf dem Server die gelikten Produkte. Es werden nur die Produkte, die der Nutzer favorisiert hat (basierend auf der Datenbank), an das Template übergeben.
+
+3. Rendering und Benutzererfahrung:
+   - home.html bietet ein dynamisches Erlebnis mit clientseitigem Laden und Aktualisieren der Produktliste.
+   - favorites.html liefert bereits verarbeitete und gefilterte Daten und benötigt keine zusätzliche clientseitige Datenverarbeitung.
+-->
+
+## Nutzung
+
+1. **Anmelden / Registrieren:** Nutzer müssen sich anmelden oder registrieren, um auf die personalisierten Features zugreifen zu können.
+2. **Produkte durchsuchen:** Auf der Home-Seite werden Produkte angezeigt. Diese werden dynamisch per API-Aufruf geladen.
+3. **Favoriten verwalten:** Mit einem Klick auf "Gefällt mir" wird ein Produkt favorisiert. Für bereits favorisierte Produkte zeigt die Anwendung eine entsprechende Meldung an.
+4. **Favoriten anzeigen:** In der Favoriten-Seite sieht der Nutzer sämtliche von ihm favorisierte Produkte. Diese Daten werden serverseitig gefiltert und angezeigt.
+
+## Lizenz
+
+Dieses Projekt ist lizenziert unter der MIT-Lizenz.
