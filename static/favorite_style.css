@@ -13,7 +13,7 @@
   }
   .favorite-box{
     /* Stil für die Favoritenbox */
-    background-color: #ffffff56;
+   
     padding: 2.5rem 2rem; 
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -63,4 +63,14 @@
     /* Stil für zusätzliche Favoriteninfos */
     margin-bottom: 0.8rem;
     color: #555; 
+  }
+
+  .favorite-input{
+    margin-bottom: 20px; 
+    padding: 8px; 
+    width: 100%; 
+    max-width: 400px; 
+    font-size: 16px; 
+    border-radius: 5px; 
+    border: 1px solid #222222;
   }

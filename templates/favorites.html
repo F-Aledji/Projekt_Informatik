@@ -36,6 +36,7 @@
 
         <!-- Unterüberschrift für die gelikten Produkte -->
         <h3 class="favorite-subheading"> Produkte mit Likes</h3>
+        <input class="favorite-input" type="text" id="search-input" placeholder="Produkt suchen..." >
         {% if liked_products %}
             <!-- Produktliste: Zeigt alle gelikten Produkte als Karten -->
             <div class="product-list-wrapper">
@@ -63,4 +64,24 @@
         {% endif %}
     </div>
 </div>
+<script>
+    // Holt das Eingabefeld aus dem HTML (mit der ID "search-input")
+    const searchInput = document.getElementById("search-input"); 
+  
+    // Fügt einen Event Listener hinzu: Reagiert auf jede Eingabe im Feld
+    searchInput.addEventListener("input", function () {
+    // Holt den aktuellen Suchbegriff und macht ihn klein (für Vergleich ohne Groß-/Kleinschreibung)
+      const query = this.value.toLowerCase();
+      // Sammelt alle Produktkarten aus dem HTML (mit der Klasse "product-card")
+      const productCards = document.querySelectorAll(".product-card");
+        // Geht jede Produktkarte einzeln durch
+      productCards.forEach(card => {
+        // Holt den Titel der Karte und macht ihn klein
+        const title = card.querySelector("h4").innerText.toLowerCase();
+        // Vergleicht den Titel mit dem Suchbegriff
+        // Zeigt die Karte an, wenn der Titel den Suchbegriff enthält, sonst versteckt sie
+        card.style.display = title.includes(query) ? "block" : "none";
+      });
+    });
+  </script>
 {% endblock %}
