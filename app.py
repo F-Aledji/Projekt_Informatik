@@ -221,37 +221,35 @@ def debug_session_view():
 # Route für die Like-Funktion. Wird per AJAX aufgerufen. Ajax ist eine Technik, um im Hintergrund Daten zu senden und zu empfangen, ohne die Seite neu zu laden.
 @app.route('/like', methods=['POST'])
 def like():
-    data = request.get_json() # JSON-Daten von der Anfrage holen.
+    data = request.get_json()
     if not data:
-        return jsonify(success=False, message="Keine Daten"), 400 # Fehler, wenn keine Daten.
-    product_title = data.get('title') # Produkttitel aus den Daten holen.
+        return jsonify(success=False, message="Keine Daten"), 400
+    product_title = data.get('title')
 
     if not product_title:
-        return jsonify(success=False, message="Fehlender Titel"), 400 # Fehler, wenn Titel fehlt.
+        return jsonify(success=False, message="Fehlender Titel"), 400
 
-    current_username = session['user_data'] # Aktuellen Usernamen holen.
-    liked_in_session = session.get('liked_products', []) # Gelikte Produkte aus Session holen.
+    current_username = session['user_data']
+    liked_in_session = session.get('liked_products', [])
 
-    # Prüfen, ob Produkt schon in DB gelikt ist.
-    existing_db_like = db_liked_product.query.filter_by(username=current_username, product=product_title).first() #first() gibt das erste gefundene Ergebnis zurück oder None, wenn nichts gefunden wurde.
+    existing_db_like = db_liked_product.query.filter_by(username=current_username, product=product_title).first()
     if existing_db_like:
-        flash(f'"{product_title}" ist schon in Favoriten.', 'warning') # Info-Meldung.
-        # Sicherstellen, dass es auch in der Session ist.
+        flash(f'"{product_title}" ist schon in Favoriten.', 'warning')
         if product_title not in liked_in_session:
             liked_in_session.append(product_title)
             session['liked_products'] = liked_in_session
+            session.modified = True
     else:
-        # Produkt neu liken (in DB und Session).
-        new_db_like = db_liked_product(username=current_username, product=product_title) # Nimmt den Usernamen und Produkttitel als Parameter.
+        new_db_like = db_liked_product(username=current_username, product=product_title)
+        db.session.add(new_db_like)    # Eintrag wird hier hinzugefügt!
         db.session.commit()
         if product_title not in liked_in_session:
             liked_in_session.append(product_title)
             session['liked_products'] = liked_in_session
-        flash(f'"{product_title}" zu Favoriten hinzugefügt!', 'success') # Erfolgsmeldung.
-    
-    return jsonify(success=True, message=f"Like für {product_title} aktualisiert."), 200 # JSON-Antwort zurück.
+            session.modified = True
+        flash(f'"{product_title}" zu Favoriten hinzugefügt!', 'success')
 
-
+    return jsonify(success=True, message=f"Like für {product_title} aktualisiert."), 200
 # Route für die Unlike-Funktion. Wird per POST-Anfrage aufgerufen.
 @app.route('/unlike', methods=['POST'])
 def unlike():

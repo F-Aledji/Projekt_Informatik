@@ -11,16 +11,16 @@
 
     <!-- Registrierungsformular -->
     <form method="POST">
-        <!-- Eingabefeld für den Benutzernamen -->
+        <!-- Eingabefeld für den Benutzernamen (wird für das Login später benötigt) -->
         <label>Benutzername:</label>
         <input type="text" name="username" required>
-        <!-- Eingabefeld für die E-Mail -->
+        <!-- Eingabefeld für die E-Mail (wird für Benachrichtigungen oder Passwort-Reset benötigt) -->
         <label>E-Mail:</label>
         <input type="email" name="email" required>
-        <!-- Eingabefeld für das Passwort -->
+        <!-- Eingabefeld für das Passwort (wird verschlüsselt gespeichert) -->
         <label>Passwort:</label>
         <input type="password" name="password" required>
-        <!-- Auswahlfeld für das Land -->
+        <!-- Auswahlfeld für das Land (nur als Beispiel, könnte für Statistiken genutzt werden) -->
         <label>Land:</label>
         <select name="country" required>
             <option value="Deutschland">Deutschland</option>
